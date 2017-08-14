@@ -1,0 +1,170 @@
+
+MapR Commands:
+
+maprcli node list -columns csvc
+
+maprcli service list
+
+./configure.sh -C Node1:7222 -Z Node1:5181 -N ClusterName
+
+./configure.sh -R
+
+/etc/security/limits.conf
+mapr - memlock unlimited
+mapr - core unlimited
+mapr - nofile 64000
+mapr - nproc unlimited
+mapr - nice -10
+
+/opt/mapr/support/tools/mapr-support-dump.sh
+
+/configure.sh -C Node1:7222 -Z Node1:5181 -N ClusterName -noDB
+
+maprcli node services -nodes host1,host2,host3,host4,host5 -tasktracker restart
+
+pullcentralconfig
+
+Make sure /var/mapr/configuration has the same directory structure as the originating directory structure.
+
+ie: /opt/mapr/conf = /var/mapr/configuration/default/conf
+
+
+maprcli dump volumeinfo -volumename runtime.queue -json | grep -i resync |wc -l
+
+MapR Aliases:
+
+alias mapr_nfs='maprcli node list -filter "[service==nfs] and [service==fileserver]" -columns service'
+alias mapr_health='maprcli node list -filter [service==fileserver] -columns configuredservice,healthDesc'
+alias mapr_hosts='maprcli node list -columns hostname -noheader'
+alias mapr_check='maprcli node list -filter [service==fileserver] -columns configuredservice,healthDesc'
+alias mapr_svccheck=' maprcli node list -filter "[service==*]" -columns service'
+
+sudo lsof | awk '{if(NR>1) print $3}' | sort | uniq -c | sort -nr | head
+
+Below command gives details on % of mirror completed (mirror-percent-complete) and volume type ("volumetype":1  indicates mirror volume) .
+
+[mapr@node9 logs]$ maprcli volume info -name mirrorvol -json
+
+
+                               Important Maprcli Commands
+
+Turn on Debug for maprcli command
+maprcli service list -node `hostname` -cli.loglevel DEBUG
+
+List all Alarms
+/opt/mapr/bin/maprcli alarm list 
+
+List all cldb's
+/opt/mapr/bin/maprcli node listcldbs
+
+List all Zk's
+/opt/mapr/bin/maprcli node listzookeepers
+
+Info for  certain details of the cluster nodes in column
+/opt/mapr/bin/maprcli node list -columns  service,ip,disks,health,faileddisks,mtotal,cpus  
+
+Total node info in cluster
+/opt/mapr/bin/maprcli node list -json      
+
+Find topology from command line 
+/opt/mapr/bin/maprcli node topo -json
+
+List's volume with detail's  
+/opt/mapr/bin/maprcli volume list -json         
+
+Lists all disk's from local node 
+/opt/mapr/bin/maprcli disk list -host 127.0.0.1        
+
+Displays all configuration cluster wide 
+/opt/mapr/bin/maprcli config load -json             
+
+Dumps SP’s usage and shows active container moves
+/opt/mapr/bin/maprcli dump balancerinfo -json     
+
+Dumps active Master balancing across the nodes
+/opt/mapr/bin/maprcli dump rolebalancerinfo –json
+
+Dumps Info about replication
+/opt/mapr/bin/maprcli dump rereplicationinfo –json
+
+Lists CLDB master
+/opt/mapr/bin/maprcli node cldbmaster
+
+Dump info stored in zookeeper
+/opt/mapr/bin/maprcli dump zkinfo -zkconnect pt-mapr-001.shortcovers.local:5181,pt-mapr-002.shortcovers.local:5181,pt-mapr-003.shortcovers.local:5181 –json
+
+Dump volume info with details for containers
+/opt/mapr/bin/maprcli dump volumeinfo -volumename <VolumeName> –json
+
+List's Virtual IP's
+/usr/bin/maprcli virtualip list
+
+Container Replication info
+maprcli dump replicationmanagerinfo/rereplicationinfo/
+replicationmanagerqueueinfo  -volumename  <volumename>
+
+Switch Container Master from current master node
+maprcli debugdb switchMaster -cid <CID> (except for CID 1)
+
+Trace level information 
+maprcli trace info
+
+Container INFO
+maprcli dump containerinfo -ids 2049
+
+Allow node in cluster
+maprcli node allow-into-cluster  -hostids hostids
+
+Stop/Start/Restart Services
+maprcli node services -tasktracker restart -nodes <node 1>
+
+Removing Volume
+maprcli volume remove -name  volumeName
+
+Removing Volume link 
+maprcli volume link  remove –path  <actual-path>
+
+The Volume topology for given volume
+maprcli volume list -columns mountdir,rackpath | grep <VolumeName>
+
+URL for service
+maprcli urls –name <jobtracker>
+
+The node topology of all the nodes in the cluster
+maprcli node list -columns hostname,id,racktopo
+
+Setup ALARM 
+maprcli alarm config save -values "<alarm name>,1,<email address>"
+
+TT Map and Reduce Slots 
+maprcli node list -columns h,ttmapSlots,ttReduceSlots
+
+Max number of containers threshold set 
+maprcli node list -columns mct,nmc
+
+List offline containers
+maprcli dump containers -type offline -json               
+
+Change limit for container threshold
+maprcli node modify -nodes <hostname> -maxContainers 60000  (Setting the maxContainers to 0 will not raise the alarm)
+
+
+VIP Assignment
+
+1. Move a VIP to another NIC.
+   maprcli virtualip move -virtualip <vip> -tomac <mac-address>
+
+2. At the time of adding the vips set the preferred macs for them.
+   maprcli virtualip add -virtualip <vip> [-virtualipend <vip>]
+      [-preferredmac <mapc-address]
+
+3. Update the preferred macs for set of vips.
+   maprcli virtualip edit -virtualip <vip> [-virtualipend <vip>]
+      [-preferredmac <mapc-address]
+
+4. List the vips with preferred mac setting (if any).
+   maprcli virtualip list
+  
+Modify replication factor for volume
+maprcli volume modify -name mapr.cldb.internal -minreplication 1
+

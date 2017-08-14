@@ -1,0 +1,11 @@
+#Kill SysStats.sh script which is running in background
+
+ps -ef| grep SystemStats.sh | grep -v grep | awk '{print $2}' | xargs kill -9
+
+# Kill all top process which is collecting the info
+
+for i in `ps -ef| grep -w top | grep -v grep | awk '{print $2}'`; do kill -9 $i; done
+for i in `ps -ef| grep -w mpstat  | grep -v grep | awk '{print $2}'`; do kill -9 $i; done
+for i in `ps -ef| grep -w sar | grep -v grep | awk '{print $2}'`; do kill -9 $i; done
+for i in `ps -ef| grep -w iostat  | grep -v grep | awk '{print $2}'`; do kill -9 $i; done
+for i in `ps -ef| grep -w vmstat | grep -v grep | awk '{print $2}'`; do kill -9 $i; done

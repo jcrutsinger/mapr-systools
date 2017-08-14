@@ -1,0 +1,29 @@
+#!/bin/sh
+# Script to run some disk IO tests
+# Created By: Joe Crutsinger
+# July 12, 2017
+
+echo " "
+echo "Running normal disk test ..."
+echo "------------------------"
+dd if=/dev/zero of=/tmp/test1.img bs=1G count=1 oflag=dsync
+echo " "
+
+echo "Running dd Test 1 GB against MapR ..."
+echo "------------------------"
+dd if=/dev/zero of=/mapr/test1.img bs=1G count=1
+echo " "
+
+echo "Running dd Test 5 GB against MapR ..."
+echo "------------------------"
+dd if=/dev/zero of=/mapr/test2.img bs=1G count=5
+echo " "
+
+echo "Running dd Test 10 GB against MapR..."
+echo "-------------------------"
+dd if=/dev/zero of=/mapr/test3.img bs=1G count=10
+echo " "
+
+echo "Completed"
+rm -rf /mapr/test*.img
+exit 0;

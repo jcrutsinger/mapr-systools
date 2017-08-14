@@ -1,0 +1,7 @@
+
+
+If you have 3 ZKs you can afford to lose one, if you have 5 you can afford to lose two.
+
+echo mntr | nc localhost  5181
+
+echo ruok | nc 127.0.0.1 5181
