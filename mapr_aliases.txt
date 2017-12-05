@@ -1,0 +1,9 @@
+MapR Aliases
+
+# MapR Aliases
+alias mapr_nfs='maprcli node list -filter "[service==nfs] and [service==fileserver]" -columns service'
+alias mapr_health='maprcli node list -filter [service==fileserver] -columns configuredservice,healthDesc'
+alias mapr_hosts='maprcli node list -columns hostname -noheader'
+alias mapr_check='maprcli node list -filter [service==fileserver] -columns configuredservice,healthDesc'
+alias mapr_svccheck=' maprcli node list -filter "[service==*]" -columns service'
+ 
