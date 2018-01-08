@@ -1,0 +1,1 @@
+/opt/mapr/spark/spark-2.0.1/bin/run-example --master yarn --deploy-mode client SparkPi 10
