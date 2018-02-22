@@ -1,0 +1,37 @@
+drop table demo.customers;
+drop table demo.policies;
+drop table demo.claims;
+create external table if not exists demo.customers(
+        CUST_ID VARCHAR(15),
+        COUNTRY VARCHAR(25),
+        CITY VARCHAR(25),
+        EDUCATION VARCHAR(25),
+        EMP_STATUS VARCHAR(25),
+        GENDER VARCHAR(25),
+        LOCATION VARCHAR(25),
+        MARRIAGE_STATUS VARCHAR(25))
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ',' lines terminated by '\n'
+STORED AS TEXTFILE LOCATION '/icbc_data/customer';
+
+create external table if not exists demo.policies(
+        POLICY_ID VARCHAR(15),
+        CUST_ID VARCHAR(15),
+        POLICY_TYPE VARCHAR(25),
+        COVERAGE VARCHAR(25),
+        VEHICLE_SIZE VARCHAR(25),
+        VEHICLE_TYPE VARCHAR(25),
+        EFFECTIVE_DATE VARCHAR(15),
+        MONTHLY_PREMIUM VARCHAR(15))
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ',' lines terminated by '\n'
+STORED AS TEXTFILE LOCATION '/icbc_data/policy';
+
+create external table if not exists demo.claims(
+        CLAIM_ID VARCHAR(15),
+        POLICY_ID VARCHAR(15),
+        CLAIM_TYPE VARCHAR(25),
+        CLAIM_AMT STRING)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ',' lines terminated by '\n'
+STORED AS TEXTFILE LOCATION '/icbc_data/claim';

@@ -1,0 +1,6 @@
+
+
+docker run -it -p 9995:9995 -e HOST_IP=192.168.99.101 -p 10000-10010:10000-10010 -e MAPR_CLUSTER=demo -e MAPR_CLDB_HOSTS=192.168.99.101 -e MAPR_CONTAINER_USER=mapr -e MAPR_CONTAINER_PASSWORD=mapr -e MAPR_CONTAINER_GROUP=mapr -e MAPR_CONTAINER_UID=5000 -e MAPR_CONTAINER_GID=5000 -e MAPR_MOUNT_PATH=/mapr --cap-add  SYS_ADMIN --cap-add SYS_RESOURCE --device /dev/fuse -e MAPR_HS_HOST=192.168.99.101 -e ZEPPELIN_NOTEBOOK_DIR=/opt/mapr/zeppelin maprtech/data-science-refinery:v1.0_6.0.0_4.0.0_centos7
+
+
+yum install mapr-cldb mapr-zookeeper mapr-nfs mapr-webserver mapr-apiserver mapr-gateway mapr-resourcemanager mapr-nodemanager mapr-historyserver mapr-fileserver mapr-hive mapr-hiveserver2 mapr-tez mapr-drill 
