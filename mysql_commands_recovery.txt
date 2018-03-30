@@ -1,0 +1,13 @@
+
+
+mysqldump --master-data=1 --lock-tables --apply-slave-statements --all-databases > mysqlall_dump_preupgrade_mapr_12062017.sql
+
+mysqldump --master-data=2 --databases hive > mysql_hive_dump_preupgrade_mapr_12062017.sql
+
+mysqldump --master-data=2 --databases oozie > mysql_oozie_dump_preupgrade_mapr_12062017.sql
+
+mysqldump --master-data=2 --databases mysql > mysql_mysqldb_dump_preupgrade_mapr_12062017.sql
+
+mysqldump --master-data=2 --databases cma* > mysql_cma_dump_preupgrade_mapr_12062017.sql
+
+mysqldump --master-data=2 --databases *cem > mysql_cem_dump_preupgrade_mapr_12062017.sql

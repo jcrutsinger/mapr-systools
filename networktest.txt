@@ -1,0 +1,55 @@
+# Define array of server hosts (half of all hosts in cluster)
+half1=(10.10.70.109 10.10.70.110)
+
+for node in "${half1[@]}"; do
+  #ssh -n $node /root/iperf -s -i3&  # iperf alternative test, requires iperf binary pushed out to all nodes like rpctest
+  ssh -n $node /opt/mapr/server/tools/rpctest -server &
+done
+echo Servers have been launched
+sleep 10 # let the servers set up
+
+# Define 2nd array of client hosts (other half of all hosts in cluster)
+half2=(10.10.70.109 10.10.70.110)
+
+for clientnode in "${half2[@]}"; do
+  for servernode in "${half1[@]}"; do
+    echo "Launching RPC test:$clientnode-$servernode"
+    ssh -n $clientnode "rm -rf  rpctest-$clientnode-to-$servernode.log"
+    ssh -n $clientnode "/opt/mapr/server/tools/rpctest -client 50000 $servernode > rpctest-$clientnode-to-$servernode.log" & # Concurrent mode, if using sequential mode remove "&"
+  done
+done
+echo Clients have been launched
+
+wait $! # comment out for Sequential mode
+sleep 20
+
+echo "The network bandwidth (mb/s is MB/sec) between nodes i.e clientnode-to-servernode (Baseline 1GbE=125MB/s, 10GbE=1250MB/s)"
+tmp=${half2[@]}
+clush -w ${tmp// /,} 'grep -i -e ^Rate -e error rpctest*log' 
+
+tmp=${half1[@]}
+clush -w ${tmp// /,} pkill rpctest #Kill the servers
+_______________________________________________________________________________________
+
+For the script to run you need passworless SSH setup and Clush shell to retrieve the results. Please refer to below blogs for details on setup.
+
+http://abizeradenwala.blogspot.com/2015/07/creating-ssh-trust-quickly.html
+http://abizeradenwala.blogspot.com/2015/07/how-to-install-configure-and-use-c-lush.html
+
+Executing the script logs below details RPC test between client node to server node, It is ok to ignore RPC test results where client and server are on same node . Main value is from client and server nodes sitting across different racks or DC .
+
+[root@node10 ~]# ./networktest.sh 
+Servers have been launched
+Launching RPC test:10.10.70.109-10.10.70.109
+Launching RPC test:10.10.70.109-10.10.70.110
+Launching RPC test:10.10.70.110-10.10.70.109
+Launching RPC test:10.10.70.110-10.10.70.110
+Clients have been launched
+
+The network bandwidth (mb/s is MB/sec) between nodes i.e clientnode-to-servernode (Baseline 1GbE=125MB/s, 10GbE=1250MB/s)
+10.10.70.109: rpctest-10.10.70.109-to-10.10.70.109.log:Rate: 977.29 MB/s, time: 53.6491 sec, #rpcs 800031, rpcs/sec 14912.3
+10.10.70.109: rpctest-10.10.70.109-to-10.10.70.110.log:Rate: 763.52 MB/s, time: 68.6703 sec, #rpcs 800031, rpcs/sec 11650.3
+10.10.70.110: rpctest-10.10.70.110-to-10.10.70.109.log:Rate: 828.08 MB/s, time: 63.3162 sec, #rpcs 800031, rpcs/sec 12635.5
+10.10.70.110: rpctest-10.10.70.110-to-10.10.70.110.log:Rate: 788.81 MB/s, time: 66.468 sec, #rpcs 800031, rpcs/sec 12036.3
+
+Above few lines give us a good idea on the rate we can expect across 2 different nodes in the cluster and weed out slacker nodes in the cluster which can be cause of bottleneck in the cluster.

@@ -1,0 +1,95 @@
+
+YARN Config for Multi-Tenancy - Ericsson EEA/ODP:
+
+Node Labels:
+
+ip-172-31-43-95.us-east-2.compute.internal      odp
+ip-172-31-43-96.us-east-2.compute.internal      odp
+ip-172-31-43-97.us-east-2.compute.internal      odp
+ip-172-31-43-94.us-east-2.compute.internal      eea
+ip-172-31-43-93.us-east-2.compute.internal      eea
+
+Resource Manager's fair-scheduler.xml: (Notice, this has equal weights and nothing fancy for user/group queues)
+
+<?xml version="1.0"?>
+<allocations>
+  <queue name="eea">
+    <weight>1.0</weight>
+    <labelPolicy>PREFER_QUEUE</labelPolicy>
+    <label>eea</label>
+  </queue>
+  <queue name="odp">
+    <weight>1.0</weight>
+    <labelPolicy>PREFER_QUEUE</labelPolicy>
+    <label>odp</label>
+  </queue>
+</allocations>
+
+Resource Manager's yarn-site.xml: (Notice this node falls under the odp node label)
+
+<property>
+   <name>node.labels.file</name>
+   <value>/var/mapr/node.labels</value>
+   <description>The path to the node labels file.</description>
+</property>
+
+<property>
+   <name>node.labels.monitor.interval</name>
+   <value>120000</value>
+   <description>Interval for checking the labels file for updates (default is 120000 ms)</description>
+</property>
+
+<property>
+    <name>yarn.scheduler.fair.allocation.file</name>
+    <value>/opt/mapr/hadoop/fair-scheduler.xml</value>
+    <description>Location of fair-scheduler file describing the queues</description>
+  </property>
+
+  <property>
+    <name>mapreduce.job.label</name>
+    <value>odp</value>
+    <description>Label expression for MapReduce job which will run only on labelled nodes</description>
+  </property>
+</configuration>
+
+ODP Nodes yarn-site.xml: (Notice the mapreduce.job.label = odp, any job submitted here without a job.label on submission will go to the odp nodes only)
+
+  <!-- :::CAUTION::: DO NOT EDIT ANYTHING ON OR ABOVE THIS LINE -->
+
+<property>
+   <name>node.labels.file</name>
+   <value>/var/mapr/node.labels</value>
+   <description>The path to the node labels file.</description>
+</property>
+
+<property>
+   <name>node.labels.monitor.interval</name>
+   <value>120000</value>
+   <description>Interval for checking the labels file for updates (default is 120000 ms)</description>
+</property>
+
+<property>
+   <name>mapreduce.job.label</name>
+   <value>odp</value>
+   <description>Label expression for MapReduce job which will run only on labelled nodes</description>
+</property>
+
+EEA Nodes yarn-site.xml: (Notice the mapreduce.job.label = eea, any job submitted here without a job.label parameter passed on submission will go to the eea nodes only)
+
+<property>
+   <name>node.labels.file</name>
+   <value>/var/mapr/node.labels</value>
+   <description>The path to the node labels file.</description>
+</property>
+
+<property>
+   <name>node.labels.monitor.interval</name>
+   <value>120000</value>
+   <description>Interval for checking the labels file for updates (default is 120000 ms)</description>
+</property>
+
+<property>
+   <name>mapreduce.job.label</name>
+   <value>eea</value>
+   <description>Label expression for MapReduce job which will run only on labelled nodes</description>
+</property>

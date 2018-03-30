@@ -1,0 +1,19 @@
+docker run --rm -it \
+--cap-add SYS_ADMIN --cap-add SYS_RESOURCE --device /dev/fuse --memory 0 \
+-e MAPR_CLUSTER=fe60.mapr.com \
+-e MAPR_MOUNT_PATH=/mapr \
+-e MAPR_TZ=UTC \
+-e MAPR_CONTAINER_USER=mapr \
+-e MAPR_CONTAINER_UID=2000 \
+-e MAPR_CONTAINER_GROUP=mapr \
+-e MAPR_CONTAINER_GID=2000 \
+-e MAPR_CONTAINER_PASSWORD=mapr60ga \
+-e MAPR_CLDB_HOSTS=172.16.3.35 \
+-e MAPR_TICKETFILE_LOCATION=/tmp/mapr_ticket \
+-e ZEPPELIN_SSL_PORT=9995 \
+-p 9995:9995 -p 10000-10010:10000-10010 \
+-e HOST_IP=172.29.102.10 \
+-v /foo/bar/maprticket_2000:/tmp/mapr_ticket:ro \
+-v /sys/fs/cgroup:/sys/fs/cgroup:ro \
+maprtech/data-science-refinery
+
