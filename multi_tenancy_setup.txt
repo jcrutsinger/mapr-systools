@@ -1,27 +1,27 @@
 
-YARN Config for Multi-Tenancy - Ericsson EEA/ODP:
+YARN Config for Multi-Tenancy
 
 Node Labels:
 
-ip-172-31-43-95.us-east-2.compute.internal      odp
-ip-172-31-43-96.us-east-2.compute.internal      odp
-ip-172-31-43-97.us-east-2.compute.internal      odp
-ip-172-31-43-94.us-east-2.compute.internal      eea
-ip-172-31-43-93.us-east-2.compute.internal      eea
+ip-172-31-43-95.us-east-2.compute.internal      ooo
+ip-172-31-43-96.us-east-2.compute.internal      ooo
+ip-172-31-43-97.us-east-2.compute.internal      ooo
+ip-172-31-43-94.us-east-2.compute.internal      eee
+ip-172-31-43-93.us-east-2.compute.internal      eee
 
 Resource Manager's fair-scheduler.xml: (Notice, this has equal weights and nothing fancy for user/group queues)
 
 <?xml version="1.0"?>
 <allocations>
-  <queue name="eea">
+  <queue name="eee">
     <weight>1.0</weight>
     <labelPolicy>PREFER_QUEUE</labelPolicy>
-    <label>eea</label>
+    <label>eee</label>
   </queue>
-  <queue name="odp">
+  <queue name="ooo">
     <weight>1.0</weight>
     <labelPolicy>PREFER_QUEUE</labelPolicy>
-    <label>odp</label>
+    <label>ooo</label>
   </queue>
 </allocations>
 
@@ -52,7 +52,7 @@ Resource Manager's yarn-site.xml: (Notice this node falls under the odp node lab
   </property>
 </configuration>
 
-ODP Nodes yarn-site.xml: (Notice the mapreduce.job.label = odp, any job submitted here without a job.label on submission will go to the odp nodes only)
+OOO Nodes yarn-site.xml: (Notice the mapreduce.job.label = ooo, any job submitted here without a job.label on submission will go to the odp nodes only)
 
   <!-- :::CAUTION::: DO NOT EDIT ANYTHING ON OR ABOVE THIS LINE -->
 
@@ -70,11 +70,11 @@ ODP Nodes yarn-site.xml: (Notice the mapreduce.job.label = odp, any job submitte
 
 <property>
    <name>mapreduce.job.label</name>
-   <value>odp</value>
+   <value>ooo</value>
    <description>Label expression for MapReduce job which will run only on labelled nodes</description>
 </property>
 
-EEA Nodes yarn-site.xml: (Notice the mapreduce.job.label = eea, any job submitted here without a job.label parameter passed on submission will go to the eea nodes only)
+EEE Nodes yarn-site.xml: (Notice the mapreduce.job.label = eee, any job submitted here without a job.label parameter passed on submission will go to the eee nodes only)
 
 <property>
    <name>node.labels.file</name>
@@ -90,6 +90,6 @@ EEA Nodes yarn-site.xml: (Notice the mapreduce.job.label = eea, any job submitte
 
 <property>
    <name>mapreduce.job.label</name>
-   <value>eea</value>
+   <value>eee</value>
    <description>Label expression for MapReduce job which will run only on labelled nodes</description>
 </property>
