@@ -8,6 +8,6 @@ mysqldump --master-data=2 --databases oozie > mysql_oozie_dump_preupgrade_mapr_1
 
 mysqldump --master-data=2 --databases mysql > mysql_mysqldb_dump_preupgrade_mapr_12062017.sql
 
-mysqldump --master-data=2 --databases cma* > mysql_cma_dump_preupgrade_mapr_12062017.sql
+mysqldump --master-data=2 --databases ca* > mysql_ca_dump_preupgrade_mapr_12062017.sql
 
-mysqldump --master-data=2 --databases *cem > mysql_cem_dump_preupgrade_mapr_12062017.sql
+mysqldump --master-data=2 --databases *ac > mysql_ac_dump_preupgrade_mapr_12062017.sql
